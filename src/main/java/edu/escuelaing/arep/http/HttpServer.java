@@ -10,47 +10,52 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 public class HttpServer {
 
-    private static List<Activity> activities = new ArrayList<>();
+    private static List<Activity> activities = new CopyOnWriteArrayList<>();
     private static final int PORT = 23727;
     private static String route = "target/classes/";
-    private static Map<String, Pair<Method, LinkedHashMap<String, String>>> services= new HashMap();
+    private static Map<String, Pair<Method, LinkedHashMap<String, String>>> services= new HashMap<>();
     private static boolean isRunning = true;
+    private static final int THREADS = 10;
+    private static ExecutorService threadPool = Executors.newFixedThreadPool(THREADS);
 
-    public static void start() throws IOException, InvocationTargetException, IllegalAccessException, URISyntaxException {
+    public static void start() throws IOException {
         ServerSocket serverSocket = new ServerSocket(PORT);
         System.out.println("Server started through port " + PORT);
-        while(isRunning){
-            Socket clientSocket = serverSocket.accept();
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            String inputLine = "";
-            boolean isFirstLine = true;
-            String file = "";
 
-            while((inputLine = in.readLine()) != null){
-                if(isFirstLine){
-                    file = inputLine.split(" ")[1];
-                    isFirstLine = false;
+        // Finishing the server
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            threadPool.shutdown();
+            try {
+                if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                    threadPool.shutdownNow();
                 }
-                if (!in.ready()) break;
+            } catch (InterruptedException e) {
+                threadPool.shutdownNow();
             }
 
-            URI resourceURI = new URI(file);
-            HttpRequest req = new HttpRequest(resourceURI.getPath(), resourceURI.getQuery());
-            HttpResponse res = new HttpResponse(out);
-            if (req.getPath().startsWith("/app")) processRequest(req, res);
-            else out.println(obtainFile(req, clientSocket.getOutputStream()));
-            in.close();
-            out.close();
-            clientSocket.close();
+            stop();
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Server closed.");
+        }));
+
+        // Receiving clients through threadPool
+        while(isRunning){
+            Socket clientSocket = serverSocket.accept();
+            threadPool.submit(new ClientHandler(clientSocket));
         }
-        serverSocket.close();
     }
 
     static void processRequest(HttpRequest req, HttpResponse res) throws InvocationTargetException, IllegalAccessException {
@@ -146,14 +151,6 @@ public class HttpServer {
                 + "\r\n").getBytes());
     }
 
-    public static List<Activity> getActivities(){
-        return activities;
-    }
-
-    public static void setActivities(List<Activity> newActivities){
-        activities = newActivities;
-    }
-
     public static void get(String route, Method method){
         LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
         for(Parameter p : method.getParameters()){
@@ -166,11 +163,24 @@ public class HttpServer {
         services.put("/app" + route, methodPair);
     }
 
-    public static void staticFiles(String path){
+    // Synchronizing the method to keep the variable route consistent
+    public synchronized static void staticFiles(String path){
         route = "target/classes/" + path;
     }
 
     public static void stop(){
         isRunning = false;
+    }
+
+    public static List<Activity> getActivities(){
+        return activities;
+    }
+
+    public static void addActivity(Activity activity){
+        activities.add(activity);
+    }
+
+    public static void removeActivity(Predicate condition){
+        activities.removeIf(condition);
     }
 }

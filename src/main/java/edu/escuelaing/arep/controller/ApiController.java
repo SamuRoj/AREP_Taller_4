@@ -34,9 +34,7 @@ public class ApiController {
     @PostMapping("/post/activities")
     public static String addActivity(@RequestParam(value = "time", defaultValue = "12:00 AM") String time,
                                      @RequestParam(value = "activity", defaultValue = "Sleep") String activity) {
-        List<Activity> newActivities = HttpServer.getActivities();
-        newActivities.add(new Activity(time, activity));
-        HttpServer.setActivities(newActivities);
+        HttpServer.addActivity(new Activity(time, activity));
         return "HTTP/1.1 201 Accepted\r\n,"
                 + "Content-Type: text/plain\r\n\r\n,";
     }
@@ -44,9 +42,7 @@ public class ApiController {
     @DeleteMapping("/delete/activities")
     public static String deleteActivity(@RequestParam(value = "time", defaultValue = "12:00 AM") String time) {
         Predicate<Activity> condition = activity -> activity.getTime().equals(time);
-        List<Activity> newActivities = HttpServer.getActivities();
-        newActivities.removeIf(condition);
-        HttpServer.setActivities(newActivities);
+        HttpServer.removeActivity(condition);
         return "HTTP/1.1 201 Accepted\r\n,"
                 + "Content-Type: text/plain\r\n\r\n,";
     }
