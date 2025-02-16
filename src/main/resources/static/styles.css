@@ -1,0 +1,109 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Jost', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background-image: url('wallpaper.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+h1 {
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+    font-size: 2.5em;
+}
+
+.timetable {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    font-size: 1.2em;
+}
+
+label {
+    margin-bottom: 3px;
+    color: white;
+    font-size: inherit;
+}
+
+input {
+    margin: 3px 0 5px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: inherit;
+    padding: 5px;
+}
+
+#add-activity-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 12px 20px;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+#add-activity-btn:hover {
+    background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #d32f2f;
+}

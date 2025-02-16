@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planeador</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1>Planeador</h1>
+
+<form id="add-form">
+    <label for="time">Hora: </label>
+    <input type="text" id="time" name="time">
+    <label for="activity">Actividad: </label>
+    <input type="text" id="activity" name="activity">
+    <input id="add-activity-btn" type="button" value="Añadir" onclick="addActivity()">
+</form>
+
+<div class="timetable">
+    <table id="timetable">
+        <thead>
+        <tr>
+            <th>Hora</th>
+            <th>Actividad</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
