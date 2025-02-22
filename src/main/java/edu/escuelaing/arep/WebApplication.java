@@ -4,9 +4,9 @@ import edu.escuelaing.arep.annotations.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static edu.escuelaing.arep.http.HttpServer.*;
 
 public class WebApplication {
@@ -14,19 +14,19 @@ public class WebApplication {
     public static void main(String[] args) throws Exception {
         loadComponents();
         staticFiles("static");
-        start();
+        start(getPort());
     }
 
-    private static void loadComponents() throws URISyntaxException, ClassNotFoundException {
+    private static void loadComponents() throws ClassNotFoundException {
         // Loading the files from the hard drive
-        String packageName = "edu.escuelaing.arep.controller";
-        String path = packageName.replace('.', '/');
-        File folder = new File("target/classes/" + path);
+        String env = getClassFolder();
+        File folder = new File(env);
         List<Class<?>> classes = new ArrayList<>();
 
         for (File file : folder.listFiles()) {
             if (file.getName().endsWith(".class")) {
-                String className = packageName + '.' + file.getName().replace(".class", "");
+                String className = "edu.escuelaing.arep.controller." +
+                        file.getName().replace(".class", "");
                 classes.add(Class.forName(className));
             }
         }
@@ -50,5 +50,19 @@ public class WebApplication {
                 }
             }
         }
+    }
+
+    private static int getPort() {
+        if (System.getenv("PORT") != null) {
+            return Integer.parseInt(System.getenv("PORT"));
+        }
+        return 23727;
+    }
+
+    private static String getClassFolder() {
+        if (System.getenv("CLASSES_DIR") != null) {
+            return System.getenv("CLASSES_DIR");
+        }
+        return "target/classes/edu/escuelaing/arep/controller";
     }
 }

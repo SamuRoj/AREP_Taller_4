@@ -19,15 +19,17 @@ import java.util.function.Predicate;
 
 public class HttpServer {
 
+    private static final int THREADS = 10;
+    private static int PORT;
+
     private static List<Activity> activities = new CopyOnWriteArrayList<>();
-    private static final int PORT = 23727;
     private static String route = "target/classes/";
     private static Map<String, Pair<Method, LinkedHashMap<String, String>>> services= new HashMap<>();
     private static boolean isRunning = true;
-    private static final int THREADS = 10;
     private static ExecutorService threadPool = Executors.newFixedThreadPool(THREADS);
 
-    public static void start() throws IOException {
+    public static void start(int port) throws IOException {
+        PORT = port;
         ServerSocket serverSocket = new ServerSocket(PORT);
         System.out.println("Server started through port " + PORT);
 
