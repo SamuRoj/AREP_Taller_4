@@ -13,8 +13,8 @@ public class HttpRequest {
         return path;
     }
 
-    public String getQuery() {
-        return query;
+    public String getOrDefault(String param, String defaultValue){
+        return getValues(param) != null ? getValues(param) : defaultValue;
     }
 
     public String getValues(String value){

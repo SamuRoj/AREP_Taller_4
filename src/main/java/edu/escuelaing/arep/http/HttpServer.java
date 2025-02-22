@@ -68,11 +68,11 @@ public class HttpServer {
                 + "Content-Type: application/json\r\n\r\n,";
 
         if(req.getPath().contains("greeting") ){
-            String name = req.getValues(keys.get(0)) != null ? req.getValues(keys.get(0)) : params.get(keys.get(0));
+            String name = req.getOrDefault(keys.get(0), params.get(keys.get(0)));
             ans = "{\"response\":\""+ method.invoke(null, name) +"\"}";
         }
         else if(req.getPath().contains("folder")){
-            String folder = req.getValues(keys.get(0)) != null ? req.getValues(keys.get(0)) : params.get(keys.get(0));
+            String folder = req.getOrDefault(keys.get(0), params.get(keys.get(0)));
             method.invoke(null, folder);
             ans = "{\"response\":\" Folder has been changed to " + route +"\"}";
         }
@@ -80,12 +80,12 @@ public class HttpServer {
             ans = (String) method.invoke(null);
         }
         else if(req.getPath().contains("post/activities")){
-            String time = req.getValues(keys.get(0)) != null ? req.getValues(keys.get(0)) : params.get(keys.get(0));
-            String name = req.getValues(keys.get(1)) != null ? req.getValues(keys.get(1)) : params.get(keys.get(1));
+            String time = req.getOrDefault(keys.get(0), params.get(keys.get(0)));
+            String name = req.getOrDefault(keys.get(1), params.get(keys.get(1)));
             header = (String) method.invoke(null, time, name);
         }
         else if(req.getPath().contains("delete/activities")){
-            String time = req.getValues(keys.get(0)) != null ? req.getValues(keys.get(0)) : params.get(keys.get(0));
+            String time = req.getOrDefault(keys.get(0), params.get(keys.get(0)));
             header = (String) method.invoke(null, time);
         }
         else{
@@ -137,7 +137,7 @@ public class HttpServer {
         return "text/plain";
     }
 
-    static void obtainImage(String file, String response, OutputStream out) throws IOException {
+    public static void obtainImage(String file, String response, OutputStream out) throws IOException {
         File imageFile = new File(route + "/" + file);
         if(imageFile.exists()){
             FileInputStream fis = new FileInputStream(imageFile);
@@ -182,5 +182,9 @@ public class HttpServer {
 
     public static void removeActivity(Predicate condition){
         activities.removeIf(condition);
+    }
+
+    public static void deleteActivities(){
+        activities = new CopyOnWriteArrayList<>();
     }
 }
