@@ -1,9 +1,11 @@
-# Web Framework Development with Reflection, IoC Pattern and Meta Protocol Objects
+# Modularization and Virtualization of a Concurrent Web Server
 
 This project implements a framework designed to serve HTML pages and PNG images. It also offers an Inversion of Control 
 (IoC) framework for building web applications from POJOs (Plain Old Java Objects). Additionally, it provides developer 
 tools to define REST services with custom annotations, manage query parameters within requests, specify the location of 
-static files for the server and includes a small web application for planning daily activities.
+static files for the server and includes a small web application for planning daily activities. Now the server 
+receives multiple simultaneous requests by implementing a thread pool that manages clients and a graceful shutdown
+method to finish the server properly. 
 
 ## Getting Started
 
@@ -44,13 +46,13 @@ git --version
 1. Clone the repository to your local machine using Git.
 
 ```
-git clone https://github.com/SamuRoj/AREP_Taller_3.git
+git clone https://github.com/SamuRoj/AREP_Taller_4.git
 ```
 
 2. Navigate to the project directory.
 
 ```
-cd AREP_Taller_3
+cd AREP_Taller_4
 ```
 
 3. Build the project by running the following command:
@@ -116,6 +118,18 @@ method can be requested through the following URL with the parameter folder `htt
 
   ![Webpage.png](src/main/resources/img/Webpage.png)
 
+- **Concurrent Requests:** Allows simultaneous petitions through the creation of a ThreadPool to manage the requests
+of the clients by creating client handlers and submitting them to the pool to answer their request.
+
+  ![Threads.png](src/main/resources/img/Threads.png) 
+
+  ![ThreadPool.png](src/main/resources/img/ThreadPool.png)
+
+- **Graceful Shutdown:** Every time the server receives a kill signal, it finishes properly by terminating the 
+ThreadPool and the closing the server socket.
+
+  ![Shutdown.png](src/main/resources/img/Shutdown.png)
+
 ## Architecture
 
 ### Deployment Diagram
@@ -149,6 +163,11 @@ An image named `webserver` will be created from the instructions of the file nam
 docker build --tag webserver .
 ```
 
+![DockerBuild.png](src/main/resources/img/DockerBuild.png)
+
+
+![DockerDesktopBuild.png](src/main/resources/img/DockerDesktopBuild.png)
+
 2. It can be tested locally by creating the previous image and running the following command to create a container of
 the application
 
@@ -156,17 +175,26 @@ the application
 docker run -d -p 23727:6000 --name webservertest webserver
 ```
 
+![DockerRun.png](src/main/resources/img/DockerRun.png)
+
+
+![DockerDesktopRun.png](src/main/resources/img/DockerDesktopRun.png)
+
 3. Now the application could be accessed through this link in a browser: 
 
 ```
 http://localhost:23727/
 ```
 
+![DockerPage.png](src/main/resources/img/DockerPage.png)
+
 ### Video with Dockerhub and AWS deployment working
 
+This is a demo that shows the deployment of the image on DockerHub, the virtual machine used in AWS, the creation
+of the container and the access to the server through the virtual machine showing all the features included in the 
+web application. 
 
-
-1. First create a new repository on DockerHub
+![DockerAWSDemo.gif](src/main/resources/vid/DockerAWSDemo.gif)
 
 ## Running the tests
 
@@ -236,6 +264,10 @@ the REST services defined within the controllers with custom annotations by quer
 
       ![RSTestStructure.png](src/main/resources/img/RSTestStructure.png)
 
+- Example of multiple petitions to the application through threads and a consistent answer as a result:
+
+  ![ThreadsTestStructure.png](src/main/resources/img/ThreadsTestStructure.png)
+
 - Image of the results:
 
   ![WebApplicationTestResults.png](src/main/resources/img/WebApplicationTestResults.png)
@@ -244,6 +276,8 @@ the REST services defined within the controllers with custom annotations by quer
 
 * [Java Development Kit](https://www.oracle.com/co/java/technologies/downloads/) - Software Toolkit
 * [Maven](https://maven.apache.org/) - Dependency Management
+* [Docker](https://www.docker.com/) - Platform for building, running, and managing containerized applications
+* [AWS](https://aws.amazon.com/es/) - Cloud computing platform for hosting, storage, and computing services
 * [Git](https://git-scm.com/) - Distributed Version Control System
 
 ## Authors
