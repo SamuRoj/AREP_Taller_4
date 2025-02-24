@@ -62,7 +62,7 @@ mvn clean install
 4. Execute the project with the following command:
 
 ```
-java -cp target/taller-3-1.0-SNAPSHOT.jar edu.escuelaing.arep.WebApplication
+java -cp target/taller-4-1.0-SNAPSHOT.jar edu.escuelaing.arep.WebApplication
 ```
 
 5. Once the server is running, open your web browser and visit:
@@ -137,6 +137,36 @@ This diagram summarizes the interactions between the client and the HttpServer i
   added by the developer.
 - **Web Application:** Works as a middleware to connect the HTTP Server and the client, it also defines some
   REST services, loads the components (Controllers) and the route where the files will be searched.
+
+## Docker and AWS Deployment
+
+### Local Deployment
+
+1. First from the root of the project execute the following command to create a new Docker image of the project.
+An image named `webserver` will be created from the instructions of the file named Dockerfile. 
+
+```
+docker build --tag webserver .
+```
+
+2. It can be tested locally by creating the previous image and running the following command to create a container of
+the application
+
+```
+docker run -d -p 23727:6000 --name webservertest webserver
+```
+
+3. Now the application could be accessed through this link in a browser: 
+
+```
+http://localhost:23727/
+```
+
+### Video with Dockerhub and AWS deployment working
+
+
+
+1. First create a new repository on DockerHub
 
 ## Running the tests
 
