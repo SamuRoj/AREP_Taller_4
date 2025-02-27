@@ -105,13 +105,13 @@ method can be requested through the following URL with the parameter folder `htt
 
   - **Note:** The REST services defined within the controllers will continue to be available.
 
-- Query for static files located in the defined folder, to do this just add to the route of the page the name
+- **Query for static files** located in the defined folder, to do this just add to the route of the page the name
   of the file like `http://localhost:23727/<filename>`, it can be made with any file that's located in the
   current folder.
 
   ![QueryFile.png](src/main/resources/img/QueryFile.png)
 
-- The main page contains a small app that allows the user to add his daily activities through requests methods
+- **The main page contains a small app** that allows the user to add his daily activities through requests methods
   like GET, POST and DELETE, it's made with HTML, CSS and JavaScript to make asynchronous petitions to the server
   and add new activities to it, all the services mentioned before are found in the ApiController.java file through a
   REST service.
@@ -126,19 +126,15 @@ of the clients by creating client handlers and submitting them to the pool to an
   ![ThreadPool.png](src/main/resources/img/ThreadPool.png)
 
 - **Graceful Shutdown:** Every time the server receives a kill signal, it finishes properly by terminating the 
-ThreadPool and the closing the server socket.
+ThreadPool and closing the server socket.
 
   ![Shutdown.png](src/main/resources/img/Shutdown.png)
 
 ## Architecture
 
-### Deployment Diagram
+### Components Diagram
 
-  ![DeploymentDiagram.png](src/main/resources/img/DeploymentDiagram.png)
-
-### Overview
-
-This diagram summarizes the interactions between the client and the HttpServer implementation.
+  ![ComponentsDiagram.png](src/main/resources/img/ComponentsDiagram.png)
 
 ### Components
 
@@ -151,6 +147,68 @@ This diagram summarizes the interactions between the client and the HttpServer i
   added by the developer.
 - **Web Application:** Works as a middleware to connect the HTTP Server and the client, it also defines some
   REST services, loads the components (Controllers) and the route where the files will be searched.
+
+### Project Structure
+
+```
+├───main
+│   ├───java
+│   │   └───edu
+│   │       └───escuelaing
+│   │           └───arep
+│   │               │   WebApplication.java # Class that configures controllers and environment variables for the HttpServer
+│   │               │
+│   │               ├───annotations # Custom annotations
+│   │               │       DeleteMapping.java
+│   │               │       GetMapping.java
+│   │               │       PostMapping.java
+│   │               │       RequestParam.java
+│   │               │       RestController.java
+│   │               │
+│   │               ├───controller # Controllers that contains the REST services being offered
+│   │               │       ApiController.java
+│   │               │       MathController.java
+│   │               │       ServerController.java
+│   │               │
+│   │               ├───http 
+│   │               │       ClientHandler.java # Thread to recieve clients
+│   │               │       HttpRequest.java 
+│   │               │       HttpResponse.java
+│   │               │       HttpServer.java # Main server class
+│   │               │
+│   │               ├───model
+│   │               │       Activity.java # Template for the activities received at the main app
+│   │               │       Pair.java
+│   │               │
+│   │               └───threads
+│   │                       ClientThread.java # Thread used for tests
+│   │
+│   └───resources
+│       ├───img # Images used in the README
+│       │
+│       ├───newFolder # Example folder for the functionality of the static files endpoint
+│       │       index.html
+│       │
+│       ├───static # Static files for the webpage
+│       │       index.html
+│       │       script.js
+│       │       styles.css
+│       │       wallpaper.jpeg
+│       │
+│       └───vid
+│               DockerAWSDemo.gif
+│               LocalDockerTest.gif              
+│
+└───test
+  └───java
+    └───edu
+      └───escuelaing
+        └───arep # Test files
+          HttpRequestTest.java
+          HttpResponseTest.java
+          HttpServerTest.java
+          WebApplicationTest.java
+```
 
 ## Docker and AWS Deployment
 
@@ -187,6 +245,12 @@ http://localhost:23727/
 ```
 
 ![DockerPage.png](src/main/resources/img/DockerPage.png)
+
+### Video of local deployment
+
+Demo that shows the previous steps working in three differente containers. 
+
+![LocalDockerTest.gif](src/main/resources/vid/LocalDockerTest.gif)
 
 ### Video with Dockerhub and AWS deployment working
 
